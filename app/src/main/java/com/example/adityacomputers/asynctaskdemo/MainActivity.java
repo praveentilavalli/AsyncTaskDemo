@@ -36,12 +36,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
+                     //check whether external storage is ready
                     if(isExternalStorageReady()) {
+                         //get the data from edittext
                         String data = etData.getText().toString();
+                         //create the test.txt file in savedfiles folder
                         String root=getExternalFilesDir(null).toString();
                         File dir=new File(root+"/savedfiles");
                         if(!dir.exists())
                         dir.mkdirs();
+                         //write the data to test.txt file
                         File file=new File(dir,"test.txt");
                         FileOutputStream fos = new FileOutputStream(file,true);
                         PrintStream ps = new PrintStream(fos);
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isExternalStorageReady())
                 {
+                     //get the file on external storage if it exists delete it
                   File file=new File(getExternalFilesDir(null).toString()+"/savedfiles/test.txt");
                     if(file.exists()) {
                         file.delete();
@@ -77,19 +82,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+     //AsyncTask class for reading the file from external storage and display it on textview 
     class ReadFiles extends AsyncTask<String,Void,String>
     {
 
+         //overide doinbackground method to read the file
         @Override
         protected String doInBackground(String... strings) {
             String content="";
             try {
                 StringBuffer sb = new StringBuffer();
                 if(isExternalStorageReady()) {
+                     //find the file
                     String root=getExternalFilesDir(null).toString();
                     File dir=new File(root+"/savedfiles");
                     File file=new File(dir,"test.txt");
-//                    File file=new File(getExternalFilesDir(null).toString()+"/savedfiles/test.txt");
+                     //read all the lines from the file
                     FileInputStream fis =new FileInputStream(file);
                     BufferedReader br = new BufferedReader(new InputStreamReader(fis));
                     String line = "";
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
+             //display the content on textview
             txtcontent.setText(s);
         }
     }
